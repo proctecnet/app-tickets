@@ -12,7 +12,7 @@ const ticketsContext = useContext(TicketContext);
 
   useEffect(() => {
     ticketsContext.fetchTickets();
-  }, []);
+  }, [ticketsContext]);
 
   return (
     <div>
