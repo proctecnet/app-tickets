@@ -1,42 +1,40 @@
-import React, { useState, useContext } from "react";
-//import { makeStyles } from "@material-ui/core/styles";
-//import { TextField, Button, Card, CardContent, Typography } from "@material-ui/core";
-import { AuthContext } from "../../context/AuthContext"; // Import AuthContext
 
-//const useStyles = makeStyles({ /* Styles... */ });
+import React, { useContext } from 'react';
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
+import { SessionContext } from '../../context/SessionContext';
+
+export const useSession = () => useContext(SessionContext);
 
 const Login = () => {
-  //const classes = useStyles();
-  const { setCurrentUser } = useContext(AuthContext); // Access context values
+  const { username, setUsername, password, setPassword, license, setLicense, handleLogin } = useSession();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = () => {
-    // Simulate login logic
-    const body = {
-      username,
-      password,
-      license: "licencia-de-ejemplo",
-    };
-
-    console.log("Enviando datos al backend:", body);
-
-    // Assuming successful login, set currentUser
-    setCurrentUser({ username }); // Update context with user data
-
-    // Simulate successful login message or redirect
-    alert("Login exitoso!");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin();
   };
 
   return (
     <div>
-        <div>cdasfda</div>
-        <p>fdsafdfadsfdfasd</p>
+      <h2>Iniciar sesión</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="p-field">
+          <label htmlFor="username">Nombre de usuario</label>
+          <InputText id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </div>
+        <div className="p-field">
+          <label htmlFor="password">Contraseña</label>
+          <InputText id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <div className="p-field">
+          <label htmlFor="license">Licencia</label>
+          <InputText id="license" value={license} onChange={(e) => setLicense(e.target.value)} />
+        </div>
+        <div className="p-field">
+          <Button label="Iniciar sesión" type="submit" />
+        </div>
+      </form>
     </div>
-    // <div className={classes.root}>
-    //   {/* Rest of your login component code... */}
-    // </div>
   );
 };
 
