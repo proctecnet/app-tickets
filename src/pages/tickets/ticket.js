@@ -5,6 +5,9 @@ import { TicketContext } from '../../context/TicketContext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { BlockUI } from 'primereact/blockui';
+        
 
 
 const Tickets = () => {
@@ -12,33 +15,29 @@ const ticketsContext = useContext(TicketContext);
 
   useEffect(() => {
     ticketsContext.fetchTickets();
-  }, [ticketsContext]);
+  }, []);
 
   return (
     <div>
       <h2>Tickets</h2>
-      <Button label="Crear" onClick={() => ticketsContext.instaceNewTicket()} />
+      <Button label="Analizar" onClick={() => ticketsContext.instaceNewPhishing()} />
       <Dialog visible={ticketsContext.displayDialog} onHide={() => ticketsContext.setDisplayDialog(false)}>
-        <h3>Crear Ticket</h3>
+        <h3>Analizar web</h3>
         <div className="p-grid p-fluid">
           <div className="p-field p-col-12">
-            <label htmlFor="url">URL</label>
-            <InputText id="url" name="url" value={ticketsContext.newTicketData.url} onChange={ticketsContext.handleInputChange} />
+            <label htmlFor="url">Posible URL suplantadora</label>
+            <InputText id="url" name="url" value={ticketsContext.phishingForm.url} onChange={ticketsContext.handleInputChange} />
           </div>
           <div className="p-field p-col-12">
             <label htmlFor="marcaAfectada">Marca Afectada</label>
-            <InputText id="marcaAfectada" name="marcaAfectada" value={ticketsContext.newTicketData.marcaAfectada} onChange={ticketsContext.handleInputChange} />
+            <InputText id="marcaAfectada" name="marca" value={ticketsContext.phishingForm.sitioAfectado.marca} onChange={ticketsContext.handleNestedInputChange} />
           </div>
           <div className="p-field p-col-12">
-            <label htmlFor="correoProveedor">Correo del Proveedor</label>
-            <InputText id="correoProveedor" name="correoProveedor" value={ticketsContext.newTicketData.correoProveedor} onChange={ticketsContext.handleInputChange} />
-          </div>
-          <div className="p-field p-col-12">
-            <label htmlFor="correoCliente">Correo del Cliente</label>
-            <InputText id="correoCliente" name="correoCliente" value={ticketsContext.newTicketData.correoCliente} onChange={ticketsContext.handleInputChange} />
+            <label htmlFor="correoProveedor">URL real</label>
+            <InputText id="correoProveedor" name="URL" value={ticketsContext.phishingForm.sitioAfectado.URL} onChange={ticketsContext.handleNestedInputChange} />
           </div>
         </div>
-        <Button label="Crear" onClick={ticketsContext.createTicket} />
+        <Button label="Analizar" onClick={ticketsContext.createTicket} />
       </Dialog>
       <DataTable value={ticketsContext.tickets}>
         <Column field="id" header="ID" />

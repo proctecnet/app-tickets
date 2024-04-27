@@ -2,7 +2,6 @@ import './App.css';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Login from './pages/login/Login';
 import LoginLayout from './pages/layouts/LoginLayout';
-import CreateTicket from './pages/tickets/create';
 import TicketLayout from './pages/layouts/TicketLayout';
 import { SessionProvider } from './context/SessionContext';
 import Tickets from './pages/tickets/ticket';
@@ -22,7 +21,6 @@ function App() {
                 
                 <Route path="/tickets" element={<TicketLayout />}>
                   <Route path="/tickets" element={<Tickets />} />
-                  <Route path="/tickets/create" element={<CreateTicket />} />
                 </Route>
             </Routes>
           </TicketProvider>

@@ -16,12 +16,10 @@ export const TicketProvider = ({ children }) => {
     const userContext = useContext(SessionContext);
     const [tickets, setTickets] = useState([]);
     const [displayDialog, setDisplayDialog] = useState(false);
-    const [newTicketData, setNewTicketData] = useState({
-        url: '',
-        marcaAfectada: '',
-        correoProveedor: '',
-        correoCliente: ''
-        });
+    const [phishingForm, setPhishingForm] = useState({
+      url: '',
+      sitioAfectado: {URL: '', marca: ''}
+      });
 
     axiosInstance.interceptors.request.use(
         config => {
@@ -34,20 +32,20 @@ export const TicketProvider = ({ children }) => {
         error => Promise.reject(error)
     );
 
-    const instaceNewTicket =() =>{
+    const instaceNewPhishing =() =>{
         setDisplayDialog(true)
-        setNewTicketData({
+        setPhishingForm({
             url: '',
-            marcaAfectada: '',
-            correoProveedor: '',
-            correoCliente: ''
+            sitioAfectado: {URL: '', marca: ''}
             })
     }
 
     const createTicket = async () => {
-        await axiosInstance.post("", newTicketData);
-        setDisplayDialog(false)
-        fetchTickets()
+        await axiosInstance.post("/analyze", [phishingForm]);
+        fetchTickets().then(() => {
+          setDisplayDialog(false)
+        })
+
     }
 
 
@@ -61,12 +59,26 @@ export const TicketProvider = ({ children }) => {
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewTicketData(prevData => ({
-          ...prevData,
-          [name]: value
-        }));
-      };
+      const { name, value } = e.target;
+      setPhishingForm((prevData) => ({
+        ...prevData,
+        [name]: value
+      }));
+    };
+  
+    const handleNestedInputChange = (event) => {
+      const { name, value } = event.target;
+
+      setPhishingForm((prevState) => ({
+        url: prevState.url,
+        sitioAfectado: {
+          ...prevState.sitioAfectado,
+          [name]: value,
+        },
+      }));
+    };
+
+
 
   useEffect(() => {
     // Llama a fetchTickets cuando el componente se monta
@@ -75,7 +87,8 @@ export const TicketProvider = ({ children }) => {
 
   // Proporcionamos el estado de los tickets y la función para obtenerlos a los componentes hijos
   return (
-    <TicketContext.Provider value={{ tickets, fetchTickets, displayDialog, createTicket, instaceNewTicket, newTicketData, handleInputChange}}>
+    <TicketContext.Provider value={{ tickets, fetchTickets, displayDialog, createTicket, instaceNewPhishing, phishingForm, 
+    handleInputChange, handleNestedInputChange}}>
       {children}
     </TicketContext.Provider>
   );
